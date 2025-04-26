@@ -27,42 +27,36 @@ This project leverages the power of Stable Diffusion models to reimagine real-wo
 ---
 
 ## 📷 Sample Outputs and Inputs with Prompt
-Sample 1:Cherry Blossom at Megumo River,tokyo
 
-prompt:A serene evening along Tokyo's Meguro River, where cherry blossom trees arch over the water, their petals illuminated by soft lantern light. The gentle flow of the river reflects the pink hues, creating a magical atmosphere reminiscent of a Studio Ghibli scene."
+**Sample 1: Cherry Blossom at Megumo River, Tokyo**  
+**Prompt**: A serene evening along Tokyo's Meguro River, where cherry blossom trees arch over the water, their petals illuminated by soft lantern light. The gentle flow of the river reflects the pink hues, creating a magical atmosphere reminiscent of a Studio Ghibli scene.
 
-![Screenshot 2025-04-26 182242](https://github.com/user-attachments/assets/799e39a5-0366-4565-9f79-0a1ff47831d4)
+![Image 1](https://github.com/user-attachments/assets/799e39a5-0366-4565-9f79-0a1ff47831d4)
 
-Sample 2:Torii Gate in Nature
+**Sample 2: Torii Gate in Nature**  
+**Prompt**: "A peaceful ancient torii gate pathway in a misty Japanese forest, surrounded by moss-covered trees, soft magical light breaking through, Ghibli-style enchanted anime art."
 
-prompt:"A peaceful ancient torii gate pathway in a misty Japanese forest, surrounded by moss-covered trees, soft magical light breaking through, Ghibli-style enchanted anime art."
+![Image 2](https://github.com/user-attachments/assets/0f8b024c-9528-40a3-a51e-b7d550a90cc8)
 
-![Screenshot 2025-04-26 190317](https://github.com/user-attachments/assets/0f8b024c-9528-40a3-a51e-b7d550a90cc8)
+**Sample 3: Lake Scene with Mount Fuji**  
+**Prompt**: "A calm serene lake reflecting Mount Fuji during a pastel-colored sunrise, soft mist, few distant cherry trees blooming, peaceful atmosphere, highly detailed dreamy Studio Ghibli anime style."
 
-Sample 3:Lake Scene with Mount Fuji
+![Image 3](https://github.com/user-attachments/assets/36989f68-5aae-4ff1-a962-83d1a64be2ef)
 
-prompt:"A calm serene lake reflecting Mount Fuji during a pastel-colored sunrise, soft mist, few distant cherry trees blooming, peaceful atmosphere, highly detailed dreamy Studio Ghibli anime style."
+**Sample 4: Old Traditional Japanese Town**  
+**Prompt**: "A narrow old Japanese village street, traditional wooden houses with paper lanterns, cozy warm atmosphere, evening setting sun, Ghibli fantasy detailed anime art style."
 
-![Screenshot 2025-04-26 190919](https://github.com/user-attachments/assets/36989f68-5aae-4ff1-a962-83d1a64be2ef)
+![Image 4](https://github.com/user-attachments/assets/0668b995-89ee-4445-8b84-4909bacb25cd)
 
-Sample 4:Old Traditional Japanese Town
+**Sample 5: A Man Walking on a Mountain Path**  
+**Prompt**: "A man standing walking towards the mountain, surrounded by soft sunlight and gentle trees, warm atmosphere, dreamy countryside, trekking, rocky path, Studio Ghibli art style, soft pastel colors, magical realism, a little foggy and he's trekking."
 
-prompt:"A narrow old Japanese village street, traditional wooden houses with paper lanterns, cozy warm atmosphere, evening setting sun, Ghibli fantasy detailed anime art style."
+![Image 5](https://github.com/user-attachments/assets/754340ec-4a46-482f-919c-4680e421c7b8)
 
-![image](https://github.com/user-attachments/assets/0668b995-89ee-4445-8b84-4909bacb25cd)
+**Sample 6: A Girl Standing in a Sunflower Garden**  
+**Prompt**: "A young woman inside a sunflower garden enjoying the nature, Studio Ghibli art style, soft pastel colors, warm atmosphere, anime style."
 
-Sample 5:A man walking on a mountain path
-
-prompt = "A  man standing walking towards  mountain, surrounded by soft sunlight and gentle trees, warm atmosphere, dreamy countryside, trekking,rocky path, Studio Ghibli art style, soft pastel colors, magical realism,litlle foggy and he's trekking"
-
-![image](https://github.com/user-attachments/assets/754340ec-4a46-482f-919c-4680e421c7b8)
-
-
-
-
-
-
-
+![Image 6](https://github.com/user-attachments/assets/4d827102-b8e8-436c-a774-f913949ae0d8)
 
 ---
 
@@ -71,18 +65,68 @@ prompt = "A  man standing walking towards  mountain, surrounded by soft sunlight
 This project is best run on **Google Colab** (free GPU provided).
 
 ### Quick Steps:
-1. Open the Colab notebook.
-2. Upload your input image(s).
-3. Install required libraries:
+1. **Open the Colab notebook**: Open the provided notebook in Google Colab.
+2. **Upload your input image(s)**: Use the `Upload` option to upload the image(s) you want to transform.
+3. **Install required libraries**:
     ```bash
     pip install diffusers transformers accelerate scipy safetensors
     ```
-4. Load the Waifu Diffusion model.
-5. Enter your creative prompt and run the generation cell.
-6. Save and download your output!
+    This command installs the libraries required for running the diffusion model.
+   
+4. **Import Libraries**:
+    ```python
+    from diffusers import StableDiffusionImg2ImgPipeline
+    from PIL import Image
+    import torch
+    ```
+    Here, we import the libraries necessary for image generation and processing.
 
-> **Note:**  
-> Make sure you have a stable internet connection while running the model, as it requires downloading weights and running computations on GPU.
+5. **Define Image Paths**:  
+    Set the input image path (`input_path`) and the output image path (`output_path`). Make sure the paths are correct and accessible.
+    ```python
+    input_path = "path of input file "  
+    output_path = " path of output file "
+    ```
+
+6. **Load and Resize Image**:
+    ```python
+    init_image = Image.open(input_path).convert("RGB")
+    init_image = init_image.resize((512, 512))
+    ```
+    This step loads the input image and resizes it to 512x512 pixels to make it compatible with the model.
+
+7. **Define the Prompt**:
+    The prompt is where you describe what you want the generated artwork to look like. Be creative! The clearer the prompt, the better the output.
+    ```python
+    prompt = "example:A young woman standing on a countryside path surrounded by green fields and blue skies, wearing a flowing dress, Studio Ghibli style, soft pastel colors, dreamy and magical atmosphere, delicate watercolor effect, highly detailed environment"
+    ```
+
+8. **Load the Waifu Diffusion Model**:
+    ```python
+    pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
+        "hakurei/waifu-diffusion",
+        torch_dtype=torch.float16,
+    ).to("cuda")
+    ```
+    The Waifu Diffusion model is loaded from Hugging Face and set to use GPU for faster image generation.
+
+9. **Generate the Image**:
+    ```python
+    image = pipe(
+        prompt=prompt,
+        image=init_image,
+        strength=0.6,
+        guidance_scale=7.5
+    ).images[0]
+    ```
+    The image is generated using the defined prompt. The `strength` and `guidance_scale` parameters control the degree of transformation and adherence to the prompt.
+
+10. **Save and Display the Output**:
+    ```python
+    image.save(output_path)
+    image.show()
+    ```
+    The generated image is saved to the specified output path and displayed on your screen.
 
 ---
 
@@ -100,32 +144,10 @@ This project is intended **for personal, academic, and non-commercial use only**
 
 ---
 
-## ❓ FAQ
-
-### Can you explain the code cell-by-cell?
-
-Yes!  
-The project is divided into simple cells, each performing a specific task:
-
-| Step | Description |
-|:---|:---|
-| 1 | Install necessary Python libraries |
-| 2 | Import libraries (Diffusers, PIL, etc.) |
-| 3 | Load the Waifu Diffusion model into memory |
-| 4 | Define input and output image paths |
-| 5 | Load your input image and resize it |
-| 6 | Define your artistic prompt |
-| 7 | Generate the new Ghibli-style image |
-| 8 | Save and display the output |
-
-Every step is modular, so you can run them separately without repeating heavy downloads.
-
-If you need a **detailed, deep explanation cell-by-cell**, feel free to check the code comments inside the notebook or contact me!
-
----
-
 ## 📬 Contact
 
-Feel free to reach out for any questions or collaborations!
+Email: [Work.nahushreddy@gmail.com](mailto:Work.nahushreddy@gmail.com)
 
 ---
+
+Feel free to reach out for any further queries or clarification on the code!
